@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>无限点击计数</title>
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        background-color: #f5f5f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .dianzan-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .dianzan-icon {
+        font-size: 40px;
+        color: #ed4040;
+        transition: all 0.1s ease;
+        margin-bottom: 8px;
+      }
+
+      .dianzan-icon.clicked {
+        transform: scale(1.2);
+      }
+
+      .dianzan-count {
+        font-size: 16px;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dianzan-container" onclick="dianzan()">
+      <div id="dz-icon" class="dianzan-icon">❤️</div>
+      <div id="dz-count" class="dianzan-count">0</div>
+    </div>
+
+    <script>
+      function dianzan() {
+        const iconEl = document.getElementById("dz-icon");
+        const countEl = document.getElementById("dz-count");
+
+        let currentCount = parseInt(countEl.innerText);
+        currentCount += 1;
+
+        countEl.innerText = currentCount;
+
+        iconEl.classList.add("clicked");
+        setTimeout(() => {
+          iconEl.classList.remove("clicked");
+        }, 100);
+      }
+    </script>
+  </body>
+</html>
