@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>今日最重要的事</title>
+    <style>
+      body {
+        display: flex;
+        margin: 0;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        /* 核心：添加背景图样式（关键属性） */
+        background-image: url("https://cdn.phototourl.com/uploads/2026-03-12-201786f4-9984-49f3-942b-ed05eb4e4afd.jpg"); /* 示例图片地址，替换成你的图 */
+        background-size: cover; /* 铺满屏幕且保持比例 */
+        background-position: center; /* 居中显示 */
+        background-repeat: no-repeat; /* 不重复 */
+        background-attachment: fixed; /* 固定背景，滚动不移动（可选） */
+        /* 可选：给背景加半透明遮罩，让文字更清晰 */
+        position: relative;
+      }
+      /* 遮罩层（可选）：降低背景亮度，提升文字可读性 */
+      body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(
+          0,
+          0,
+          0,
+          0.5
+        ); /* 黑色半透明，0.5是透明度（0-1） */
+        z-index: 0; /* 遮罩在最底层，不遮挡内容 */
+      }
+      .input-container {
+        display: flex;
+        align-items: baseline;
+        z-index: 1; /* 确保输入框/按钮在背景/遮罩上层 */
+        position: relative; /* 让z-index生效 */
+      }
+      #inputBox {
+        border: 0;
+        border-bottom: 2px solid #fff;
+        padding: 4px 2px;
+        background: transparent; /* 输入框背景透明，不遮挡背景图 */
+        outline: none;
+        text-align: center;
+        transition: border-color 0.2s ease-in-out;
+        border-radius: 0;
+        color: #fff; /* 文字白色，适配深色背景 */
+        font-size: 2rem;
+        max-width: 90%;
+        line-height: normal;
+        vertical-align: middle;
+      }
+      #toggleBtn {
+        margin-left: -50px;
+        margin-right: 10px;
+        color: #ccc;
+        border-radius: 50%;
+        height: 40px;
+        width: 40px;
+        text-align: center;
+        font-size: 2rem;
+        line-height: 1;
+        padding: 0;
+        margin-top: 4px;
+        cursor: pointer;
+        user-select: none;
+        transition: color 0.2s;
+        display: inline-block;
+        vertical-align: middle;
+      }
+      #toggleBtn:hover {
+        color: #fff;
+      }
+      /* 占位符样式统一 */
+      input::placeholder,
+      input::-webkit-input-placeholder {
+        color: #ccc;
+        font-size: 2rem;
+        line-height: 1;
+        transition: opacity 0.2s ease;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="input-container">
+      <input placeholder="最重要的事？" id="inputBox" />
+      <span id="toggleBtn" onclick="toggleInput()">✔</span>
+    </div>
+
+    <script>
+      let isLocked = false;
+      const inputBox = document.getElementById("inputBox");
+      const toggleBtn = document.getElementById("toggleBtn");
+      const STORAGE_KEY = "mostImportantThing";
+      const PLACEHOLDER_TEXT = "最重要的事？";
+
+      inputBox.addEventListener("focus", () => {
+        if (!isLocked) {
+          inputBox.placeholder = "";
+        }
+      });
+
+      inputBox.addEventListener("blur", () => {
+        if (!isLocked && !inputBox.value.trim()) {
+          inputBox.placeholder = PLACEHOLDER_TEXT;
+        }
+      });
+
+      function toggleInput() {
+        if (!isLocked && !inputBox.value.trim()) {
+          alert("请输入最重要的事再确认！");
+          return;
+        }
+
+        if (isLocked) {
+          isLocked = false;
+          toggleBtn.innerText = "✔";
+          inputBox.style.borderBottomColor = "#fff";
+          inputBox.value = "";
+          inputBox.readOnly = false;
+          inputBox.placeholder = PLACEHOLDER_TEXT;
+          localStorage.removeItem(STORAGE_KEY);
+        } else {
+          isLocked = true;
+          toggleBtn.innerText = "✘";
+          inputBox.style.borderBottomColor = "transparent";
+          inputBox.readOnly = true;
+          inputBox.placeholder = "";
+          localStorage.setItem(STORAGE_KEY, inputBox.value.trim());
+        }
+      }
+
+      window.onload = function () {
+        const savedData = localStorage.getItem(STORAGE_KEY);
+        if (savedData) {
+          inputBox.value = savedData;
+          isLocked = true;
+          toggleBtn.innerText = "✘";
+          inputBox.style.borderBottomColor = "transparent";
+          inputBox.readOnly = true;
+          inputBox.placeholder = "";
+        }
+      };
+    </script>
+  </body>
+</html>
